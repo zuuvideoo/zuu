@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Login CS - zuuvideoo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background: #0b0f12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .log-container {
+            max-width: 400px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .log-container .avatar {
+            width: 72px;
+            height: 72px;
+            background: #4a76a8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 12px rgba(74, 118, 168, 0.3);
+        }
+
+        .log-container h1 {
+            font-size: 24px;
+            color: #1e2a36;
+            margin-bottom: 4px;
+        }
+
+        .log-container .subtitle {
+            color: #667781;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .log-container label {
+            display: block;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1e2a36;
+            margin-bottom: 6px;
+        }
+
+        .log-container input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #d0d8e0;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .log-container input:focus {
+            border-color: #4a76a8;
+        }
+
+        .log-container button {
+            width: 100%;
+            background: #4a76a8;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .log-container button:hover {
+            background: #3b5f8a;
+        }
+
+        .log-container button:active {
+            transform: scale(0.97);
+        }
+
+        .log-container .info {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #8a9aa8;
+        }
+
+        .log-container .info a {
+            color: #4a76a8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .success-msg {
+            display: none;
+            margin-top: 20px;
+            padding: 14px;
+            background: #e6f4ea;
+            border-radius: 16px;
+            color: #1e7e34;
+            font-weight: 500;
+        }
+
+        .success-msg.show {
+            display: block;
+        }
+
+        .btn-chat {
+            display: none;
+            margin-top: 12px;
+            background: #25d366;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-chat:hover {
+            background: #1da851;
+        }
+
+        .btn-chat.show {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="log-container">
+        <div class="avatar">CS</div>
+        <h1>Masuk sebagai CS</h1>
+        <p class="subtitle">Masukkan nomor telepon Anda untuk memulai sesi</p>
+
+        <form id="loginForm">
+            <label for="csPhone">Nomor Telepon</label>
+            <input type="tel" id="csPhone" placeholder="Contoh: 08123456789" required>
+
+            <button type="submit">Masuk</button>
+        </form>
+
+        <div class="info">
+            Belum punya akun? <a href="#">Hubungi admin</a>
+        </div>
+
+        <div class="success-msg" id="successMsg">
+            ✅ Login berhasil! Selamat datang, <span id="displayPhone"></span>
+        </div>
+
+        <a href="index.html" class="btn-chat" id="btnChat">💬 Buka Chat</a>
+    </div>
+
+    <script>
+        // ===== KONFIGURASI =====
+        // Ganti dengan URL Web App Anda dari Google Apps Script
+        const API_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+
+        // Fungsi kirim data ke Spreadsheet
+        async function sendToSheet(noTelp, pesanan = 'Login CS', status = 'login') {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        noTelp: noTelp,
+                        pesanan: pesanan,
+                        status: status,
+                        catatan: 'Login CS'
+                    })
+                });
+                console.log('Data login terkirim ke sheet');
+            } catch (error) {
+                console.error('Gagal kirim login:', error);
+            }
+        }
+
+        // Event login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const phoneInput = document.getElementById('csPhone');
+            const phone = phoneInput.value.trim();
+
+            if (phone === '') {
+                alert('Silakan masukkan nomor telepon.');
+                return;
+            }
+
+            // Simpan ke localStorage
+            localStorage.setItem('cs_phone', phone);
+
+            // Kirim ke Spreadsheet
+            sendToSheet(phone, 'Login CS', 'login');
+
+            // Tampilkan sukses
+            document.getElementById('displayPhone').textContent = phone;
+            document.getElementById('successMsg').classList.add('show');
+            document.getElementById('btnChat').classList.add('show');
+
+            // Sembunyikan form
+            document.getElementById('loginForm').style.display = 'none';
+            document.querySelector('.info').style.display = 'none';
+        });
+
+        // Jika sudah pernah login sebelumnya, langsung tampilkan tombol chat
+        window.addEventListener('load', function() {
+            const savedPhone = localStorage.getItem('cs_phone');
+            if (savedPhone) {
+                document.getElementById('displayPhone').textContent = savedPhone;
+                document.getElementById('successMsg').classList.add('show');
+                document.getElementById('btnChat').classList.add('show');
+                document.getElementById('loginForm').style.display = 'none';
+                document.querySelector('.info').style.display = 'none';
+                document.getElementById('csPhone').value = savedPhone;
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spreadsheets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8ecf1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .spreadsheet-container {
+            width: 100%;
+            max-width: 1100px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 32px 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .spreadsheet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .spreadsheet-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0b1e33;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spreadsheet-title i {
+            color: #4338ca;
+        }
+
+        .spreadsheet-title .badge {
+            font-size: 14px;
+            font-weight: 500;
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        .btn-kembali {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #e9edf2;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-kembali:hover {
+            background: #cbd5e1;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-tool {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border: 2px solid #e9edf2;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-tool:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+
+        .btn-tool i {
+            color: #2563eb;
+        }
+
+        .btn-tool.btn-danger i {
+            color: #dc2626;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 2px solid #e9edf2;
+            border-radius: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 700px;
+        }
+
+        table th,
+        table td {
+            padding: 10px 14px;
+            border: 1px solid #e9edf2;
+            text-align: left;
+            min-width: 100px;
+        }
+
+        table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #0f172a;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        table td {
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        table tr:hover td {
+            background: #f8fafc;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+            color: #cbd5e1;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .spreadsheet-container {
+                padding: 20px 16px;
+            }
+            .spreadsheet-title {
+                font-size: 20px;
+            }
+            .toolbar {
+                gap: 6px;
+            }
+            .btn-tool {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            table th,
+            table td {
+                padding: 6px 10px;
+                font-size: 12px;
+                min-width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="spreadsheet-container">
+        <div class="spreadsheet-header">
+            <h1 class="spreadsheet-title">
+                <i class="fas fa-table"></i> Spreadsheets
+                <span class="badge" id="totalData">0 data</span>
+            </h1>
+            <a href="index.html" class="btn-kembali">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+
+        <div class="toolbar">
+            <button class="btn-tool" onclick="refreshData()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+            <button class="btn-tool btn-danger" onclick="hapusSemua()">
+                <i class="fas fa-trash"></i> Hapus Semua
+            </button>
+            <button class="btn-tool" onclick="exportCSV()">
+                <i class="fas fa-file-export"></i> Export CSV
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="spreadsheetTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Telepon</th>
+                        <th>Subjek</th>
+                        <th>Pesan</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ===== AMBIL DATA DARI LOCALSTORAGE =====
+        function getData() {
+            return JSON.parse(localStorage.getItem('spreadsheetData')) || [];
+        }
+
+        // ===== RENDER TABEL =====
+        function renderTable() {
+            const data = getData();
+            const tbody = document.getElementById('tableBody');
+            const totalBadge = document.getElementById('totalData');
+
+            totalBadge.textContent = data.length + ' data';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Belum ada data. Kirim data dari halaman <strong>Formulir</strong>.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.tanggal || '-'}</td>
+                    <td>${item.nama}</td>
+                    <td>${item.email}</td>
+                    <td>${item.telepon || '-'}</td>
+                    <td>${item.subjek}</td>
+                    <td>${item.pesan}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ===== REFRESH DATA =====
+        function refreshData() {
+            renderTable();
+        }
+
+        // ===== HAPUS SEMUA DATA =====
+        function hapusSemua() {
+            if (confirm('Yakin ingin menghapus semua data?')) {
+                localStorage.removeItem('spreadsheetData');
+                renderTable();
+            }
+        }
+
+        // ===== EXPORT CSV =====
+        function exportCSV() {
+            const data = getData();
+            if (data.length === 0) {
+                alert('Tidak ada data untuk diexport!');
+                return;
+            }
+
+            const headers = ['No', 'Tanggal', 'Nama', 'Email', 'Telepon', 'Subjek', 'Pesan'];
+            const rows = data.map((item, index) => [
+                index + 1,
+                item.tanggal || '-',
+                item.nama,
+                item.email,
+                item.telepon || '-',
+                item.subjek,
+                item.pesan
+            ]);
+
+            const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'spreadsheet_data.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        // ===== INISIALISASI =====
+        renderTable();
+
+        // Refresh otomatis setiap 5 detik (untuk update real-time)
+        setInterval(renderTable, 5000);
+    </script>
+
+</body>
+</html>

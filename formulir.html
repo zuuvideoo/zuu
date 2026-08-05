@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulir</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8ecf1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 32px 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .form-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0b1e33;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-title i {
+            color: #4338ca;
+        }
+
+        .btn-kembali {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #e9edf2;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-kembali:hover {
+            background: #cbd5e1;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e9edf2;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4338ca;
+            box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-submit {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 28px;
+            background: #2563eb;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-submit:hover {
+            background: #1d4ed8;
+            transform: scale(1.02);
+        }
+
+        .btn-reset {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 28px;
+            background: #e9edf2;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-reset:hover {
+            background: #cbd5e1;
+        }
+
+        .alert-success {
+            display: none;
+            background: #dcfce7;
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #166534;
+            font-weight: 500;
+            margin-bottom: 16px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success.show {
+            display: flex;
+        }
+
+        .alert-success i {
+            font-size: 20px;
+            color: #22c55e;
+        }
+
+        @media (max-width: 500px) {
+            .form-container {
+                padding: 20px 16px;
+            }
+            .form-title {
+                font-size: 20px;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .form-actions button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="form-header">
+            <h1 class="form-title"><i class="fas fa-file-alt"></i> Formulir</h1>
+            <a href="index.html" class="btn-kembali"><i class="fas fa-arrow-left"></i> Kembali</a>
+        </div>
+
+        <!-- Alert Sukses -->
+        <div class="alert-success" id="alertSuccess">
+            <i class="fas fa-check-circle"></i>
+            <span>Data berhasil dikirim ke Spreadsheets!</span>
+        </div>
+
+        <form id="formulir" onsubmit="return handleSubmit(event)">
+            <div class="form-group">
+                <label>Nama Lengkap <span class="required">*</span></label>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap..." required />
+            </div>
+            <div class="form-group">
+                <label>Email <span class="required">*</span></label>
+                <input type="email" id="email" placeholder="contoh@email.com" required />
+            </div>
+            <div class="form-group">
+                <label>Nomor Telepon</label>
+                <input type="tel" id="telepon" placeholder="0812-3456-7890" />
+            </div>
+            <div class="form-group">
+                <label>Subjek <span class="required">*</span></label>
+                <select id="subjek" required>
+                    <option value="">Pilih subjek...</option>
+                    <option value="pertanyaan">Pertanyaan</option>
+                    <option value="saran">Saran</option>
+                    <option value="keluhan">Keluhan</option>
+                    <option value="lainnya">Lainnya</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Pesan <span class="required">*</span></label>
+                <textarea id="pesan" placeholder="Tulis pesan Anda di sini..." required></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Kirim</button>
+                <button type="reset" class="btn-reset"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // ===== FUNGSI SIMPAN DATA KE LOCALSTORAGE =====
+        function simpanDataSpreadsheet(dataBaru) {
+            // Ambil data yang sudah ada
+            let dataSpreadsheet = JSON.parse(localStorage.getItem('spreadsheetData')) || [];
+
+            // Tambahkan data baru dengan ID unik
+            const newEntry = {
+                id: Date.now(),
+                nama: dataBaru.nama,
+                email: dataBaru.email,
+                telepon: dataBaru.telepon,
+                subjek: dataBaru.subjek,
+                pesan: dataBaru.pesan,
+                tanggal: new Date().toLocaleString('id-ID')
+            };
+
+            dataSpreadsheet.push(newEntry);
+            localStorage.setItem('spreadsheetData', JSON.stringify(dataSpreadsheet));
+        }
+
+        // ===== HANDLE SUBMIT =====
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const nama = document.getElementById('nama').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const telepon = document.getElementById('telepon').value.trim();
+            const subjek = document.getElementById('subjek').value;
+            const pesan = document.getElementById('pesan').value.trim();
+
+            if (!nama || !email || !subjek || !pesan) {
+                alert('Harap isi semua field yang bertanda * (wajib)!');
+                return false;
+            }
+
+            // Simpan ke localStorage
+            simpanDataSpreadsheet({
+                nama: nama,
+                email: email,
+                telepon: telepon || '-',
+                subjek: subjek,
+                pesan: pesan
+            });
+
+            // Tampilkan alert sukses
+            const alert = document.getElementById('alertSuccess');
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 4000);
+
+            // Reset form
+            document.getElementById('formulir').reset();
+
+            return false;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengirim Perubahan Organ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 25px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #1a1a1a;
+        }
+        .sub {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 25px;
+        }
+        .organ-group {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .organ-name {
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .organ-name span {
+            font-size: 22px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+        .btn {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-toggle {
+            background: #2ecc71;
+            color: white;
+        }
+        .btn-toggle:hover {
+            background: #27ae60;
+        }
+        .btn-detail {
+            background: #3498db;
+            color: white;
+        }
+        .btn-detail:hover {
+            background: #2980b9;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .status-info {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        .status-info strong {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🧠 Pengirim Sinyal Organ</h2>
+    <div class="sub">Kirim perubahan ke <strong>index.html</strong> (tab utama)</div>
+
+    <!-- TANGAN -->
+    <div class="organ-group">
+        <div class="organ-name"><span>✋</span> Tangan</div>
+        <div class="btn-group">
+            <button class="btn btn-toggle" data-organ="TANGAN">Toggle</button>
+            <button class="btn btn-detail" data-organ="TANGAN">Detail</button>
+        </div>
+    </div>
+
+    <!-- KAKI -->
+    <div class="organ-group">
+        <div class="organ-name"><span>🦶</span> Kaki</div>
+        <div class="btn-group">
+            <button class="btn btn-toggle" data-organ="KAKI">Toggle</button>
+            <button class="btn btn-detail" data-organ="KAKI">Detail</button>
+        </div>
+    </div>
+
+    <!-- MULUT -->
+    <div class="organ-group">
+        <div class="organ-name"><span>👄</span> Mulut</div>
+        <div class="btn-group">
+            <button class="btn btn-toggle" data-organ="MULUT">Toggle</button>
+            <button class="btn btn-detail" data-organ="MULUT">Detail</button>
+        </div>
+    </div>
+
+    <!-- HIDUNG -->
+    <div class="organ-group">
+        <div class="organ-name"><span>👃</span> Hidung</div>
+        <div class="btn-group">
+            <button class="btn btn-toggle" data-organ="HIDUNG">Toggle</button>
+            <button class="btn btn-detail" data-organ="HIDUNG">Detail</button>
+        </div>
+    </div>
+
+    <!-- TUMIT -->
+    <div class="organ-group">
+        <div class="organ-name"><span>👟</span> Tumit</div>
+        <div class="btn-group">
+            <button class="btn btn-toggle" data-organ="TUMIT">Toggle</button>
+            <button class="btn btn-detail" data-organ="TUMIT">Detail</button>
+        </div>
+    </div>
+
+    <div class="status-info">
+        <strong>BroadcastChannel:</strong> <code>saluran_saraf</code><br>
+        Kirim pesan ke tab yang membuka <strong>index.html</strong>
+    </div>
+</div>
+
+<script>
+    // Koneksi ke channel yang sama dengan index.html
+    const channel = new BroadcastChannel('saluran_saraf');
+
+    function kirimPesan(pesan) {
+        channel.postMessage(pesan);
+        console.log(`📤 Pesan terkirim: ${pesan}`);
+        // efek visual tombol
+        const btn = event.target;
+        btn.style.opacity = '0.6';
+        setTimeout(() => btn.style.opacity = '1', 200);
+    }
+
+    // Tombol Toggle -> kirim SENGAT_NAMA
+    document.querySelectorAll('.btn-toggle').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const organ = this.dataset.organ;
+            kirimPesan.call(this, `SENGAT_${organ}`);
+        });
+    });
+
+    // Tombol Detail -> kirim DOUBLE_NAMA
+    document.querySelectorAll('.btn-detail').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const organ = this.dataset.organ;
+            kirimPesan.call(this, `DOUBLE_${organ}`);
+        });
+    });
+</script>
+
+</body>
+</html>
