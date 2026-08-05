@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tampilan Gambar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f3f4f6;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+        .caption {
+            margin-top: 15px;
+            text-align: center;
+            color: #4b5563;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 
+            🔥 CARA ISI src UNTUK GITHUB:
+            1. Jika gambar di dalam folder "images/", tulis: src="images/foto-saya.jpg"
+            2. Jika gambar selevel (sama folder) dengan index.html, tulis: src="foto-saya.jpg"
+        -->
+        <img src="images/foto-saya.jpg" alt="Deskripsi gambar saya">
+
+        <p class="caption">📸 Ini adalah gambar dari repository GitHub</p>
+    </div>
+</body>
+</html>
